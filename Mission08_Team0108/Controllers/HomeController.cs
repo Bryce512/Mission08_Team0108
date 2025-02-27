@@ -5,22 +5,16 @@ using Mission08_Team0108.Models;
 
 namespace Mission08_Team0108.Controllers;
 
-// private TaskContext _context;
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-
+    private Mission8Context _context;
+    
 // Constructor with Task Context    
-    // public HomeController(TaskContext temp)
-    // {
-    //     _context = temp;
-    // }
-
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(Mission8Context temp)
     {
-        _logger = logger;
+        _context = temp;
     }
-
+    
     public IActionResult Index()
     {
         return View();
@@ -40,44 +34,51 @@ public class HomeController : Controller
     
     public IActionResult Quadrants()
     {
-        // ViewBag.Categories = _context.Categories.ToList();
-        // var taskList = _context.Tasks.ToList();
-        //     Where(Completed != True)
-        //     orderby(Description Ascending = True);
-        // return View(taskList);
-        return View();
-    }
-
-    public IActionResult AddTask()
-    {
-
-        return View();
+        ViewBag.Categories = _context.Categories.ToList();
+        var taskList = _context.Tasks
+            .Where(x => x.IsCompleted != true)
+            .OrderBy( x => x.TaskName)
+            .ToList();
+        return View(taskList);
     }
 
     [HttpGet]
-    public IActionResult EditTask()
+    public IActionResult AddTask()
     {
-        // Task task = _context.Tasks
-        //     .Single(x => x.taskID == taskId)
-        // return View("AddTask", task);
-        return View("AddTask");
+        return View();
     }
 
     [HttpPost]
-    public IActionResult EditTask(Task updatedTask)
+    public IActionResult AddTask(TaskObj response)
     {
-        // _context.Tasks.update(updatedTask);
-        // _context.SaveChanges();
+        _context.Tasks.Add(response);
+        _context.SaveChanges();
+        return RedirectToAction("Quadrants");
+    }
+
+    [HttpGet]
+    public IActionResult EditTask(int taskId)
+    {
+        TaskObj task = _context.Tasks
+            .Single(x => x.TaskId == taskId);
+        return View("AddTask", task);
+    }
+
+    [HttpPost]
+    public IActionResult EditTask(TaskObj updatedTask)
+    {
+        _context.Tasks.Update(updatedTask);
+        _context.SaveChanges();
         return RedirectToAction("Quadrants");
     }
 
     [HttpPost]
     public IActionResult DeleteTask(int id)
     {
-        // var taskToDelete = _context.Tasks
-        //     .Single(x => x.taskId == id);
-        // _context.Tasks.Remove(taskToDelete);
-        // _context.SaveChanges();
+        var taskToDelete = _context.Tasks
+            .Single(x => x.TaskId == id);
+        _context.Tasks.Remove(taskToDelete);
+        _context.SaveChanges();
         
         return RedirectToAction("Quadrants");
     }
