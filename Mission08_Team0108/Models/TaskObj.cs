@@ -9,6 +9,9 @@ public class TaskObj
     [Required]
     public int TaskId { get; set; }
     
+    [Required]
+    public string TaskName { get; set; }
+    
     public DateTime? DueDate { get; set; }
     
     [Required]
