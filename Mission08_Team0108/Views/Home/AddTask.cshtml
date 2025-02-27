@@ -1,17 +1,17 @@
-﻿
+﻿@Model TaskObj
 @{
     ViewData["Title"] = "AddTask";
 }
 
 <h1>AddTask</h1>
 
-<form method="post">
+<form method="post" asp-action="AddTask">
 	<div class="form-group">
 		<label aspfor="Task">Task</label>
 		<input type="text" class="form-control" id="taskName" placeholder="Enter task name">
 	</div>
 	<div class="form-group">
-		<label for="DueDate">Due Dtae</label>
+		<label for="DueDate">Due Date</label>
 		<input type="date" class="form-control" id="taskDescription" placeholder="Enter task description">
 	</div>
 	<div class="form-group">

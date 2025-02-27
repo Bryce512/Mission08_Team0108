@@ -34,18 +34,26 @@ public class HomeController : Controller
     
     public IActionResult Quadrants()
     {
-        // ViewBag.Categories = _context.Categories.ToList();
-        // var taskList = _context.Tasks.ToList()
-        //     .Where(IsCompeted != True)
-        //     .OrderBy( Ascending = True);
-        // return View(taskList);
+        ViewBag.Categories = _context.Categories.ToList();
+        var taskList = _context.Tasks
+            .Where(x => x.IsCompleted != true)
+            .OrderBy( x => x.TaskName)
+            .ToList();
+        return View(taskList);
+    }
+
+    [HttpGet]
+    public IActionResult AddTask()
+    {
         return View();
     }
 
-    public IActionResult AddTask()
+    [HttpPost]
+    public IActionResult AddTask(TaskObj response)
     {
-
-        return View();
+        _context.Tasks.Add(response);
+        _context.SaveChanges();
+        return RedirectToAction("Quadrants");
     }
 
     [HttpGet]
