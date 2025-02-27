@@ -5,22 +5,16 @@ using Mission08_Team0108.Models;
 
 namespace Mission08_Team0108.Controllers;
 
-// private TaskContext _context;
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-
+    private Mission8Context _context;
+    
 // Constructor with Task Context    
-    // public HomeController(TaskContext temp)
-    // {
-    //     _context = temp;
-    // }
-
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(Mission8Context temp)
     {
-        _logger = logger;
+        _context = temp;
     }
-
+    
     public IActionResult Index()
     {
         return View();
@@ -41,9 +35,9 @@ public class HomeController : Controller
     public IActionResult Quadrants()
     {
         // ViewBag.Categories = _context.Categories.ToList();
-        // var taskList = _context.Tasks.ToList();
-        //     Where(Completed != True)
-        //     orderby(Description Ascending = True);
+        // var taskList = _context.Tasks.ToList()
+        //     .Where(IsCompeted != True)
+        //     .OrderBy( Ascending = True);
         // return View(taskList);
         return View();
     }
@@ -55,29 +49,28 @@ public class HomeController : Controller
     }
 
     [HttpGet]
-    public IActionResult EditTask()
+    public IActionResult EditTask(int taskId)
     {
-        // Task task = _context.Tasks
-        //     .Single(x => x.taskID == taskId)
-        // return View("AddTask", task);
-        return View("AddTask");
+        TaskObj task = _context.Tasks
+            .Single(x => x.TaskId == taskId);
+        return View("AddTask", task);
     }
 
     [HttpPost]
-    public IActionResult EditTask(Task updatedTask)
+    public IActionResult EditTask(TaskObj updatedTask)
     {
-        // _context.Tasks.update(updatedTask);
-        // _context.SaveChanges();
+        _context.Tasks.Update(updatedTask);
+        _context.SaveChanges();
         return RedirectToAction("Quadrants");
     }
 
     [HttpPost]
     public IActionResult DeleteTask(int id)
     {
-        // var taskToDelete = _context.Tasks
-        //     .Single(x => x.taskId == id);
-        // _context.Tasks.Remove(taskToDelete);
-        // _context.SaveChanges();
+        var taskToDelete = _context.Tasks
+            .Single(x => x.TaskId == id);
+        _context.Tasks.Remove(taskToDelete);
+        _context.SaveChanges();
         
         return RedirectToAction("Quadrants");
     }
