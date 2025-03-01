@@ -3,51 +3,72 @@
     ViewData["Title"] = "AddTask";
 }
 
-<h1 class="mb-4">Add Task</h1>
+<h1 class="text-center">Add/Edit Task</h1>
 
-<form method="post" class="container">
+<form asp-action="AddTask" method="post" class="container mt-4 p-4 border rounded shadow bg-white">
+    <h2 class="mb-4">Add/Edit Task</h2>
 
-    <!-- I'm assuming that we will have a task id as well as a task name/title-->
+    <!-- Hidden Task ID for Edit-->
+	<input asp-for="TaskId" type="hidden">
 
-    <input type="hidden" asp-for="TaskId" />
-
+    <!-- Task Name -->
     <div class="mb-3">
-        <label asp-for="TaskName" class="form-label">Task</label>
-        <input asp-for="TaskName" class="form-control" required />
+        <label asp-for="TaskName" class="form-label">Task Name</label>
+        <input asp-for="TaskName" class="form-control" required>
+        <span asp-validation-for="TaskName" class="text-danger"></span>
     </div>
 
+    <!-- Due Date -->
     <div class="mb-3">
         <label asp-for="DueDate" class="form-label">Due Date</label>
-        <input asp-for="DueDate" type="date" class="form-control" />
+        <input asp-for="DueDate" class="form-control" type="date">
+        <span asp-validation-for="DueDate" class="text-danger"></span>
     </div>
 
-    <!-- May need to change the quadrant question depending on db. If there is a quadrant table then will have to use view bag-->
-
+    <!-- Quadrant Selection -->
     <div class="mb-3">
-        <label asp-for="Quadrant" class="form-label">Quadrant</label>
-        <select asp-for="Quadrant" class="form-select" required>
-            <option value="">Select Quadrant</option>
-            <option value="1">Quadrant 1</option>
-            <option value="2">Quadrant 2</option>
-            <option value="3">Quadrant 3</option>
-            <option value="4">Quadrant 4</option>
+        <label class="form-label">Quadrant</label>
+        <div class="form-check">
+            <input class="form-check-input" asp-for="Quadrant" type="radio" value="1" id="quadrant1">
+            <label class="form-check-label" for="quadrant1">1 - Urgent & Important</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" asp-for="Quadrant" type="radio" value="2" id="quadrant2">
+            <label class="form-check-label" for="quadrant2">2 - Not Urgent but Important</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" asp-for="Quadrant" type="radio" value="3" id="quadrant3">
+            <label class="form-check-label" for="quadrant3">3 - Urgent but Not Important</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" asp-for="Quadrant" type="radio" value="4" id="quadrant4">
+            <label class="form-check-label" for="quadrant4">4 - Not Urgent & Not Important</label>
+        </div>
+        <span asp-validation-for="Quadrant" class="text-danger"></span>
+    </div>
+
+    <!-- Category Dropdown -->
+    <div class="mb-3">
+        <label asp-for="CategoryId" class="form-label">Category</label>
+        <select asp-for="CategoryId" class="form-select" required>
+            <option value="" disabled selected>Select a category</option>
+            @foreach (Category c in ViewBag.Categories)
+            {
+                <option value="@c.CategoryId">@c.CategoryName</option>
+            }
+        </select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>
+
+    <!-- Task Completed -->
+    <div class="mb-3 form-check">
+        <label class="form-check-label" asp-for="IsCompleted">Task Completed</label>
+        <select asp-for="IsCompleted" class="form-check-input" type="checkbox">
+			<option value="true">Yes</option>
+			<option value="false">No</option>
         </select>
     </div>
 
-    <!-- Same as quadrant. May need to change if there is a Category table-->
-
-    <div class="mb-3">
-        <label asp-for="Category" class="form-label">Category</label>
-        <input asp-for="Category" class="form-control" />
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Completed" class="form-label">Completed</label>
-        <select asp-for="Completed" class="form-select">
-            <option value="true">Yes</option>
-            <option value="false">No</option>
-        </select>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary w-100">Add Task</button>
 </form>
