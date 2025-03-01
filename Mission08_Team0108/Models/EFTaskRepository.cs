@@ -6,14 +6,13 @@ public class EfTaskRepository : ITaskRepository
     private Mission8Context _context;
     
 // Constructor with Task Context    
-    public EfTaskRepository(Mission8Context temp, List<Category> categories)
+    public EfTaskRepository(Mission8Context temp)
     {
         _context = temp;
-        Categories = categories;
     }
     
     public List<TaskObj> Tasks => _context.Tasks.ToList();
-    public List<Category> Categories { get; }
+    public List<Category> Categories => _context.Categories.ToList();
     public void AddTask(TaskObj task)
     {
         _context.Tasks.Add(task);
