@@ -7,12 +7,12 @@ namespace Mission08_Team0108.Controllers;
 
 public class HomeController : Controller
 {
-    private Mission8Context _context;
+    private ITaskRepository _repo;
     
 // Constructor with Task Context    
-    public HomeController(Mission8Context temp)
+    public HomeController(ITaskRepository temp)
     {
-        _context = temp;
+        _repo = temp;
     }
     
     public IActionResult Index()
@@ -34,8 +34,8 @@ public class HomeController : Controller
     
     public IActionResult Quadrants()
     {
-        ViewBag.Categories = _context.Categories.ToList();
-        var taskList = _context.Tasks
+        ViewBag.Categories = _repo.Categories.ToList();
+        var taskList = _repo.Tasks
             .Where(x => x.IsCompleted != true)
             .OrderBy( x => x.TaskName)
             .ToList();
@@ -45,7 +45,7 @@ public class HomeController : Controller
     [HttpGet]
     public IActionResult AddTask()
     {
-        ViewBag.Categories = _context.Categories.ToList();
+        ViewBag.Categories = _repo.Categories.ToList();
 
         return View();
     }
@@ -53,17 +53,16 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult AddTask(TaskObj response)
     {
-        _context.Tasks.Add(response);
-        _context.SaveChanges();
+        _repo.AddTask(response);
         return RedirectToAction("Quadrants");
     }
 
     [HttpGet]
     public IActionResult EditTask(int taskId)
     {
-        ViewBag.Categories = _context.Categories.ToList();
+        ViewBag.Categories = _repo.Categories.ToList();
 
-        TaskObj task = _context.Tasks
+        TaskObj task = (_repo).Tasks
             .Single(x => x.TaskId == taskId);
         return View("AddTask", task);
     }
@@ -71,19 +70,14 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult EditTask(TaskObj updatedTask)
     {
-        _context.Tasks.Update(updatedTask);
-        _context.SaveChanges();
+        _repo.UpdateTask(updatedTask);
         return RedirectToAction("Quadrants");
     }
 
     [HttpPost]
     public IActionResult DeleteTask(int id)
     {
-        var taskToDelete = _context.Tasks
-            .Single(x => x.TaskId == id);
-        _context.Tasks.Remove(taskToDelete);
-        _context.SaveChanges();
-        
+        _repo.DeleteTask(id);
         return RedirectToAction("Quadrants");
     }
 }
