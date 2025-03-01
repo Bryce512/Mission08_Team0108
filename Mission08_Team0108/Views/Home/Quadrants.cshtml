@@ -1,14 +1,130 @@
 @model List<TaskObj>
 
-<!DOCTYPE html>
+@{
+    ViewData["Title"] = "Task Quadrants";
+}
 
-<html>
-<head>
-    <title>title</title>
-</head>
-<body>
-<div>
-      
+<h1 class="text-center my-4">Task Management Quadrants</h1>
+
+<!-- Category Filter Dropdown -->
+<div class="container text-center">
+    <label for="categoryFilter" class="form-label fw-bold">Select a Category:</label>
+    <select id="categoryFilter" class="form-select w-50 mx-auto">
+        <option value="all">All Categories</option>
+        @foreach (var category in ViewBag.Categories)
+        {
+            <option value="@category.CategoryId">@category.CategoryName</option>
+        }
+    </select>
 </div>
-</body>
-</html>
+
+<!-- Quadrants Grid -->
+<div class="container mt-4">
+    @foreach (var category in ViewBag.Categories)
+    {
+        <div class="category-section" data-category="@category.CategoryId">
+            <h2 class="text-center bg-secondary text-white p-2">@category.CategoryName</h2>
+
+            <div class="row">
+                <!-- Quadrant 1 -->
+                <div class="col-md-6 border p-3">
+                    <h3 class="text-danger">Urgent & Important</h3>
+                    <ul class="list-group">
+                        @foreach (var task in Model.Where(t => t.Quadrant == 1 && t.CategoryId == category.CategoryId))
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>@task.TaskName (Due: @(task.DueDate?.ToString("MM/dd/yyyy") ?? "No Date"))</span>
+                                <div>
+                                    <a asp-action="EditTask" asp-route-taskId="@task.TaskId" class="btn btn-warning btn-sm">Edit</a>
+                                    <form asp-action="DeleteTask" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@task.TaskId" />
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+                <!-- Quadrant 2 -->
+                <div class="col-md-6 border p-3">
+                    <h3 class="text-primary">Not Urgent but Important</h3>
+                    <ul class="list-group">
+                        @foreach (var task in Model.Where(t => t.Quadrant == 2 && t.CategoryId == category.CategoryId))
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>@task.TaskName (Due: @(task.DueDate?.ToString("MM/dd/yyyy") ?? "No Date"))</span>
+                                <div>
+                                    <a asp-action="EditTask" asp-route-taskId="@task.TaskId" class="btn btn-warning btn-sm">Edit</a>
+                                    <form asp-action="DeleteTask" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@task.TaskId" />
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Quadrant 3 -->
+                <div class="col-md-6 border p-3">
+                    <h3 class="text-success">Urgent but Not Important</h3>
+                    <ul class="list-group">
+                        @foreach (var task in Model.Where(t => t.Quadrant == 3 && t.CategoryId == category.CategoryId))
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>@task.TaskName (Due: @(task.DueDate?.ToString("MM/dd/yyyy") ?? "No Date"))</span>
+                                <div>
+                                    <a asp-action="EditTask" asp-route-taskId="@task.TaskId" class="btn btn-warning btn-sm">Edit</a>
+                                    <form asp-action="DeleteTask" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@task.TaskId" />
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+                <!-- Quadrant 4 -->
+                <div class="col-md-6 border p-3">
+                    <h3 class="text-secondary">Not Urgent & Not Important</h3>
+                    <ul class="list-group">
+                        @foreach (var task in Model.Where(t => t.Quadrant == 4 && t.CategoryId == category.CategoryId))
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>@task.TaskName (Due: @(task.DueDate?.ToString("MM/dd/yyyy") ?? "No Date"))</span>
+                                <div>
+                                    <a asp-action="EditTask" asp-route-taskId="@task.TaskId" class="btn btn-warning btn-sm">Edit</a>
+                                    <form asp-action="DeleteTask" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@task.TaskId" />
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Filter Tasks by Category -->
+<script>
+    document.getElementById("categoryFilter").addEventListener("change", function () {
+        var selectedCategory = this.value;
+        var sections = document.querySelectorAll(".category-section");
+
+        sections.forEach(section => {
+            if (selectedCategory === "all" || section.getAttribute("data-category") === selectedCategory) {
+                section.style.display = "block";
+            } else {
+                section.style.display = "none";
+            }
+        });
+    });
+</script>
+
