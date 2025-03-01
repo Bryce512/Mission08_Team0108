@@ -8,6 +8,6 @@ public class Mission8Context : DbContext
     {
     }
     
-    public DbSet<Task> Tasks { get; set; }
+    public DbSet<TaskObj> Tasks { get; set; }
     public DbSet<Category> Categories { get; set; }
 }
