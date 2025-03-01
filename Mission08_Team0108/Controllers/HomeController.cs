@@ -45,6 +45,8 @@ public class HomeController : Controller
     [HttpGet]
     public IActionResult AddTask()
     {
+        ViewBag.Categories = _context.Categories.ToList();
+
         return View();
     }
 
@@ -59,6 +61,8 @@ public class HomeController : Controller
     [HttpGet]
     public IActionResult EditTask(int taskId)
     {
+        ViewBag.Categories = _context.Categories.ToList();
+
         TaskObj task = _context.Tasks
             .Single(x => x.TaskId == taskId);
         return View("AddTask", task);

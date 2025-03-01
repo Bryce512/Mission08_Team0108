@@ -8,9 +8,8 @@ public class TaskObj
     [Key]
     [Required]
     public int TaskId { get; set; }
-    
-    [Required]
-    public string TaskName { get; set; }
+
+    [Required] public string TaskName { get; set; } = "";
     
     public DateTime? DueDate { get; set; }
     
